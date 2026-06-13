@@ -1,4 +1,4 @@
-const API_URL = 'http://https://pdv-wem-manager-backend.onrender.com/api/pdv';
+const API_URL = 'https://pdv-wem-manager-backend.onrender.com/api/pdv';
 let carrinho = [];
 let historicoVendas = [];
 let produtoAtualTemp = null;
