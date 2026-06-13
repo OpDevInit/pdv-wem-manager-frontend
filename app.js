@@ -237,16 +237,22 @@ function fecharModalCadastro() {
     campoCodigo.focus();
 }
 
-function salvarProdutoNoBanco() {
+function salvarProdutoNoBanco(event) {
     const codigo = document.getElementById('cadCodigo').value;
     const nome = document.getElementById('cadNome').value;
     const preco = parseFloat(document.getElementById('cadPreco').value);
-    if (!codigo || !nome || isNaN(preco)) return;
+    const produtoDTO ={id: parseInt(codigo),nome :nome, preco: preco};
+
+    
+    if (!codigo || !nome || isNaN(preco)) {
+        alert("Por favor, preencha todos os campos!")
+        return;
+    }
 
     fetch(`${API_URL}/produtos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ codigoBarras: codigo, nome: nome, preco: preco })
+        body: JSON.stringify(produtoDTO)
     })
         .then(response => {
             if (response.ok) {
