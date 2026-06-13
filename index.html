@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDV Completo - Spring Boot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="layout-principal">
+
+        <div class="coluna-painel flex-3">
+            <div class="topo">
+                <h2>Frente de Caixa (PDV)</h2>
+                <button class="btn-cadastrar" onclick="abrirModalCadastro()">+ Cadastrar Produto</button>
+            </div>
+            <br>
+
+            <div class="secao-busca">
+                <label for="codigoBarras"><strong>Bipar Código de Barras:</strong></label><br>
+                <input type="text" id="codigoBarras" placeholder="Passe o leitor ou digite aqui..." autofocus>
+
+                <div id="area-quantidade" style="display: none; margin-top: 10px;">
+                    <span id="nome-produto-encontrado" style="font-weight: bold; color: #007bff;"></span>
+                    <label for="quantidade" style="margin-left: 15px;">Qtd:</label>
+                    <input type="number" id="quantidade" value="1" min="1">
+                    <button onclick="adicionarAoCarrinho()">Adicionar</button>
+                </div>
+            </div>
+
+            <h3>Itens no Carrinho</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Qtd</th>
+                        <th>Vlr Unitário</th>
+                        <th>Total</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpo-tabela"></tbody>
+            </table>
+
+            <div class="total">Total Geral: R$ <span id="total-geral">0.00</span></div>
+
+            <div class="secao-fechamento">
+                <div class="wrapper-pagamento">
+                    <div class="campo-dinheiro">
+                        <label for="formaPagamento"><strong>Forma de Pagamento:</strong></label>
+                        <select id="formaPagamento" onchange="verificarFormaPagamento()">
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Cartão de Crédito">Cartão de Crédito</option>
+                            <option value="Cartão de Débito">Cartão de Débito</option>
+                            <option value="Pix">Pix</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-dinheiro secao-dinheiro-dinamica" id="container-recebido">
+                        <label for="valorRecebido"><strong>Valor Recebido:</strong></label>
+                        <input type="text" id="valorRecebido" placeholder="0.00" oninput="aplicarMascaraMoeda(this); calcularTroco();">
+                    </div>
+
+                    <div class="campo-dinheiro secao-dinheiro-dinamica" id="container-troco">
+                        <label for="valorTroco"><strong>Troco a Devolver:</strong></label>
+                        <input type="text" id="valorTroco" class="troco-destaque" value="R$ 0.00" readonly>
+                    </div>
+                </div>
+
+                <button class="btn-fechar" onclick="finalizarVenda()">Finalizar Venda (Salvar no Excel)</button>
+            </div>
+        </div>
+
+        <div class="coluna-painel flex-2">
+            <h3>Produtos Cadastrados</h3>
+            <p style="font-size: 13px; color: #666; margin-top: 0;">Selecione os itens e adicione:</p>
+            <div class="lista-produtos-rapidos" id="lista-produtos-rapidos"></div>
+            <button class="btn-pronto" id="btn-pronto" onclick="inserirSelecionadosNoCarrinho()">Pronto</button>
+        </div>
+
+        <div class="coluna-painel flex-2">
+            <h3>Vendas Finalizadas</h3>
+            <p style="font-size: 13px; color: #666; margin-top: 0;">Histórico da sessão atual:</p>
+            <div class="container-historico">
+                <table class="tabela-historico">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Qtd</th>
+                            <th>Total</th>
+                            <th>Pagamento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-historico"></tbody>
+                </table>
+            </div>
+            <div class="total-faturado">Total Faturado: R$ <span id="total-faturado-valor">0.00</span></div>
+        </div>
+        <div class="coluna-painel flex-2">
+            <h3>Vendas Finalizadas</h3>
+            <p style="font-size: 13px; color: #666; margin-top: 0;">Histórico da sessão atual:</p>
+            <div class="container-historico">
+                <table class="tabela-historico">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Qtd</th>
+                            <th>Total</th>
+                            <th>Pagamento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-historico"></tbody>
+                </table>
+            </div>
+            <div class="total-faturado">Total Faturado: R$ <span id="total-faturado-valor">0.00</span></div>
+
+            <button class="btn-fechar-caixa" onclick="gerarRelatorioDiario()"
+                style="background-color: #28a745; width: 100%; margin-top: 10px; font-weight: bold;">
+                📊 Fechar Caixa (Gerar Excel)
+            </button>
+        </div>
+    </div>
+
+    <div id="modalCadastro" class="modal">
+        <div class="modal-conteudo">
+            <h3>Cadastrar Novo Produto</h3>
+            <label for="cadCodigo">Código de Barras:</label>
+            <input type="text" id="cadCodigo" placeholder="Bipe ou digite o código">
+            <label for="cadNome">Nome do Produto:</label>
+            <input type="text" id="cadNome" placeholder="Ex: Refrigerante Lata">
+            <label for="cadPreco">Preço (R$):</label>
+            <input type="text" id="cadPreco" placeholder="0.00" oninput="aplicarMascaraMoeda(this)">
+            <div class="modal-botoes">
+                <button class="btn-cancelar" onclick="fecharModalCadastro()">Cancelar</button>
+                <button onclick="salvarProdutoNoBanco()">Salvar Produto</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

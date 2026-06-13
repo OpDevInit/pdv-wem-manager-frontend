@@ -1,0 +1,277 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f9;
+}
+
+/* Layout flexível em três colunas */
+.layout-principal {
+    display: flex;
+    gap: 15px;
+    max-width: 1400px;
+    margin: auto;
+    align-items: flex-start;
+}
+
+.coluna-painel {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Controladores de proporção de largura */
+.flex-3 {
+    flex: 3;
+}
+
+.flex-2 {
+    flex: 2;
+}
+
+.topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h2,
+h3 {
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+.secao-busca,
+.secao-fechamento {
+    background: #eef2f7;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+input,
+select,
+button {
+    padding: 10px;
+    font-size: 16px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="text"] {
+    width: 60%;
+}
+
+input[type="number"] {
+    width: 70px;
+}
+
+/* Layout do Fechamento */
+.wrapper-pagamento {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+.campo-dinheiro {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-dinheiro input {
+    width: 120px;
+}
+
+.troco-destaque {
+    font-weight: bold;
+    color: #dc3545;
+    background-color: #ffe6e6 !important;
+}
+
+/* Botões */
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.btn-cadastrar {
+    background-color: #17a2b8;
+}
+
+.btn-cadastrar:hover {
+    background-color: #138496;
+}
+
+button.btn-fechar {
+    background-color: #007bff;
+    width: 100%;
+    margin-top: 15px;
+    font-size: 18px;
+}
+
+button.btn-fechar:hover {
+    background-color: #007bff;
+}
+
+.btn-excluir {
+    background-color: #dc3545;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.btn-excluir:hover {
+    background-color: #c82333;
+}
+
+.input-qtd-tabela {
+    padding: 5px;
+    font-size: 14px;
+    width: 60px;
+    text-align: center;
+}
+
+/* Lista Lateral de Produtos */
+.lista-produtos-rapidos {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 5px;
+    margin-bottom: 15px;
+}
+
+.item-rapido {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.item-rapido label {
+    cursor: pointer;
+    flex-grow: 1;
+    margin-left: 8px;
+}
+
+.btn-pronto {
+    background-color: #28a745;
+    font-size: 18px;
+    font-weight: bold;
+    width: 100%;
+    display: none;
+    padding: 12px;
+}
+
+/* Tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    font-size: 15px;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.total {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 15px;
+    color: #333;
+}
+
+/* Painel de Histórico */
+.container-historico {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fafafa;
+}
+
+.tabela-historico {
+    margin-top: 0;
+}
+
+.tabela-historico th {
+    background-color: #6c757d;
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+.total-faturado {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 15px;
+    color: #28a745;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-conteudo {
+    background-color: white;
+    margin: 10% auto;
+    padding: 25px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-conteudo input {
+    width: 93%;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.modal-botoes {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-cancelar {
+    background-color: #dc3545;
+}
+
+.btn-cancelar:hover {
+    background-color: #c82333;
+}
+.badge-pagamento {
+    background-color: #eef2f7;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #495057;
+    font-weight: 500;
+}
