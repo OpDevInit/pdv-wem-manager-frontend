@@ -21,7 +21,23 @@ body {
     display: flex;
     flex-direction: column;
 }
-
+.item-rapido {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .acoes-produto button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        transition: transform 0.1s ease;
+    }
+    .acoes-produto button:hover {
+        transform: scale(1.2); /* Dá um leve zoom ao passar o mouse */
+    }
 /* Controladores de proporção de largura */
 .flex-3 {
     flex: 3;
