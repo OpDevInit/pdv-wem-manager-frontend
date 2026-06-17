@@ -62,6 +62,9 @@ function carregarProdutosDoBanco() {
         .catch(err => console.error("Erro ao carregar lista de produtos:", err));
 }
 
+// 🌐 CONFIGURAÇÃO DA SUA API REAL DO RENDER
+const API_URL = "https://pdv-wem-manager-backend.onrender.com/api/pdv"; 
+
 function renderizarListaLateral() {
     const containerListaRapida = document.getElementById('lista-produtos-rapidos');
     containerListaRapida.innerHTML = '';
@@ -73,17 +76,78 @@ function renderizarListaLateral() {
 
     produtosCadastradosDoBanco.forEach((prod, index) => {
         containerListaRapida.innerHTML += `
-            <div class="item-rapido">
-                <input type="checkbox" id="chk-${index}" value="${index}" onchange="controlarBotaoPronto()">
-                <label for="chk-${index}">
-                    <strong>${prod.nome}</strong><br>
-                    <span style="font-size:13px; color:#28a745;">R$ ${prod.preco.toFixed(2)}</span>
-                </label>
-                <input type="number" id="qtd-${index}" value="1" min="1" disabled style="padding: 5px; font-size:14px;">
+            <div class="item-rapido" style="display: flex; justify-content: space-between; align-items: center; padding-right: 10px;">
+                <div style="flex-grow: 1; display: flex; align-items: center;">
+                    <input type="checkbox" id="chk-${index}" value="${index}" onchange="controlarBotaoPronto()">
+                    <label for="chk-${index}" style="margin-left: 5px; cursor: pointer;">
+                        <strong>${prod.nome}</strong><br>
+                        <span style="font-size:13px; color:#28a745;">R$ ${prod.preco.toFixed(2)}</span>
+                    </label>
+                </div>
+                
+                <input type="number" id="qtd-${index}" value="1" min="1" disabled style="padding: 5px; font-size:14px; width: 50px; margin-right: 10px;">
+                
+                <div class="acoes-produto" style="display: flex; gap: 8px;">
+                    <button onclick="editarProduto(${prod.id}, ${index})" title="Editar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px; padding: 2px;">✏️</button>
+                    <button onclick="deletarProduto(${prod.id}, ${index})" title="Deletar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px; padding: 2px;">🗑️</button>
+                </div>
             </div>
         `;
     });
-    controlarBotaoPronto();
+}
+
+// 🗑️ FUNÇÃO PARA DELETAR PRODUTO NO RENDER
+function deletarProduto(id, index) {
+    if (confirm(`Tem certeza que deseja deletar "${produtosCadastradosDoBanco[index].nome}" do sistema?`)) {
+        fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Produto removido com sucesso!");
+                // Remove do array local para atualizar a tela sem precisar dar F5
+                produtosCadastradosDoBanco.splice(index, 1);
+                renderizarListaLateral();
+            } else {
+                alert("Erro ao deletar o produto no servidor.");
+            }
+        })
+        .catch(error => console.error("Erro na requisição de deleção:", error));
+    }
+}
+
+// ✏️ FUNÇÃO PARA EDITAR PRODUTO NO RENDER
+function editarProduto(id, index) {
+    const produtoAtual = produtosCadastradosDoBanco[index];
+    const novoNome = prompt("Digite o novo nome do produto:", produtoAtual.nome);
+    const novoPreco = prompt("Digite o novo preço do produto:", produtoAtual.preco);
+
+    if (novoNome && novoPreco) {
+        const dadosAtualizados = {
+            nome: novoNome,
+            preco: parseFloat(novoPreco)
+        };
+
+        fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dadosAtualizados)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Produto atualizado com sucesso!");
+                // Atualiza o array na memória e redesenha a tela
+                produtosCadastradosDoBanco[index].nome = novoNome;
+                produtosCadastradosDoBanco[index].preco = parseFloat(novoPreco);
+                renderizarListaLateral();
+            } else {
+                alert("Erro ao salvar alterações do produto.");
+            }
+        })
+        .catch(error => console.error("Erro na requisição de edição:", error));
+    }
 }
 
 function controlarBotaoPronto() {
