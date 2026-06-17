@@ -273,7 +273,7 @@ function buscarProduto(codigo) {
         .then(res => { if (!res.ok) throw new Error(); return res.json(); })
         .then(produto => {
             produtoAtualTemp = produto;
-            nomeProdutoEncontrado.textContent = `${produto.nome} - R$ ${produto.precoUnitario.toFixed(2)}`;
+            nomeProdutoEncontrado.textContent = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
             areaQuantidade.style.display = 'block';
             campoQuantidade.focus();
             campoQuantidade.select();
