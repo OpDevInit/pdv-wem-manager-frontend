@@ -63,39 +63,48 @@ function carregarProdutosDoBanco() {
 }
 
 // 🌐 CONFIGURAÇÃO DA SUA API REAL DO RENDER
-const API_URL = "https://pdv-wem-manager-backend.onrender.com/api/pdv"; 
-
 function renderizarListaLateral() {
     const containerListaRapida = document.getElementById('lista-produtos-rapidos');
+    
+    // Garante que o elemento existe na página antes de mexer nele
+    if (!containerListaRapida) {
+        console.error("Erro: O elemento 'lista-produtos-rapidos' não foi encontrado no HTML.");
+        return;
+    }
+    
     containerListaRapida.innerHTML = '';
 
-    if (produtosCadastradosDoBanco.length === 0) {
+    if (!produtosCadastradosDoBanco || produtosCadastradosDoBanco.length === 0) {
         containerListaRapida.innerHTML = '<p style="padding:10px; color:#999;">Nenhum produto cadastrado.</p>';
         return;
     }
 
     produtosCadastradosDoBanco.forEach((prod, index) => {
+        // Proteção: Se o id vier nulo ou indefinido do backend, evita quebrar o front
+        const prodId = prod.id ? prod.id : index;
+        const nomeProd = prod.nome ? prod.nome : "Produto sem nome";
+        const precoProd = typeof prod.preco === 'number' ? prod.preco : 0;
+
         containerListaRapida.innerHTML += `
-            <div class="item-rapido" style="display: flex; justify-content: space-between; align-items: center; padding-right: 10px;">
+            <div class="item-rapido" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-bottom: 1px solid #eee;">
                 <div style="flex-grow: 1; display: flex; align-items: center;">
                     <input type="checkbox" id="chk-${index}" value="${index}" onchange="controlarBotaoPronto()">
                     <label for="chk-${index}" style="margin-left: 5px; cursor: pointer;">
-                        <strong>${prod.nome}</strong><br>
-                        <span style="font-size:13px; color:#28a745;">R$ ${prod.preco.toFixed(2)}</span>
+                        <strong>${nomeProd}</strong><br>
+                        <span style="font-size:13px; color:#28a745;">R$ ${precoProd.toFixed(2)}</span>
                     </label>
                 </div>
                 
                 <input type="number" id="qtd-${index}" value="1" min="1" disabled style="padding: 5px; font-size:14px; width: 50px; margin-right: 10px;">
                 
                 <div class="acoes-produto" style="display: flex; gap: 8px;">
-                    <button onclick="editarProduto(${prod.id}, ${index})" title="Editar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px; padding: 2px;">✏️</button>
-                    <button onclick="deletarProduto(${prod.id}, ${index})" title="Deletar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px; padding: 2px;">🗑️</button>
+                    <button onclick="editarProduto(${prodId}, ${index})" title="Editar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px;">✏️</button>
+                    <button onclick="deletarProduto(${prodId}, ${index})" title="Deletar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px;">🗑️</button>
                 </div>
             </div>
         `;
     });
 }
-
 // 🗑️ FUNÇÃO PARA DELETAR PRODUTO NO RENDER
 function deletarProduto(id, index) {
     if (confirm(`Tem certeza que deseja deletar "${produtosCadastradosDoBanco[index].nome}" do sistema?`)) {
