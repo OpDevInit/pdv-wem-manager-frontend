@@ -79,11 +79,16 @@ function renderizarListaLateral() {
         return;
     }
 
-    produtosCadastradosDoBanco.forEach((prod, index) => {
-        // Proteção: Se o id vier nulo ou indefinido do backend, evita quebrar o front
-        const prodId = prod.id ? prod.id : index;
-        const nomeProd = prod.nome ? prod.nome : "Produto sem nome";
-        const precoProd = typeof prod.preco === 'number' ? prod.preco : 0;
+    produtosCadastradosDoBanco.forEach((prod, index) => {// Substitua as linhas 83 a 86 dentro do seu forEach por isso:
+
+// 1. Garante o id ou usa o código de barras, senão assume o índice do loop
+const prodId = prod.id || prod.codigoBarras || index;
+
+// 2. CORREÇÃO DA LETRA: Garante que pega o nome correto do produto vindo do banco
+const nomeProd = prod.nome || "Produto sem nome";
+
+// 3. Garante que o preço venha correto (caso o Java mande como número)
+const precoProd = typeof prod.preco === 'number' ? prod.preco : 0;
 
         containerListaRapida.innerHTML += `
             <div class="item-rapido" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-bottom: 1px solid #eee;">
