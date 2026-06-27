@@ -65,7 +65,6 @@ function carregarProdutosDoBanco() {
 function renderizarListaLateral() {
     const containerListaRapida = document.getElementById('lista-produtos-rapidos');
 
-    // Garante que o elemento existe na página antes de mexer nele
     if (!containerListaRapida) {
         console.error("Erro: O elemento 'lista-produtos-rapidos' não foi encontrado no HTML.");
         return;
@@ -78,10 +77,8 @@ function renderizarListaLateral() {
         return;
     }
 
-    // O loop começa aqui abrindo a chave {
     produtosCadastradosDoBanco.forEach((prod, index) => { 
-        
-        // Todas as constantes precisam ficar AQUI DENTRO do loop para reconhecer o "prod"
+        // Garante o mapeamento exato vindo do Spring Boot
         const prodId = prod.codigoBarras || prod.id || index;
         const nomeProd = prod.nome || "Produto sem nome";
         const precoProd = typeof prod.preco === 'number' ? prod.preco : 0;
@@ -104,7 +101,7 @@ function renderizarListaLateral() {
                 </div>
             </div>
         `;
-    }); // O loop fecha corretamente aqui!
+    });
 }
 // 🗑️ FUNÇÃO PARA DELETAR PRODUTO NO RENDER
 function deletarProduto(id, index) {
