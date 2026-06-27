@@ -62,16 +62,15 @@ function carregarProdutosDoBanco() {
         .catch(err => console.error("Erro ao carregar lista de produtos:", err));
 }
 
-// 🌐 CONFIGURAÇÃO DA SUA API REAL DO RENDER
 function renderizarListaLateral() {
     const containerListaRapida = document.getElementById('lista-produtos-rapidos');
-    
+
     // Garante que o elemento existe na página antes de mexer nele
     if (!containerListaRapida) {
         console.error("Erro: O elemento 'lista-produtos-rapidos' não foi encontrado no HTML.");
         return;
     }
-    
+
     containerListaRapida.innerHTML = '';
 
     if (!produtosCadastradosDoBanco || produtosCadastradosDoBanco.length === 0) {
@@ -79,15 +78,13 @@ function renderizarListaLateral() {
         return;
     }
 
-    produtosCadastradosDoBanco.forEach((prod, index) => {// Substitua as linhas 83 a 86 dentro do seu forEach por isso:
-
-const prodId = prod.codigoBarras || prod.id || index;
-
-    // 2. CORREÇÃO DA LETRA (Mantenha como você já ajustou):
-    const nomeProd = prod.nome || "Produto sem nome";
-
-    // 3. GARANTIA DO PREÇO (Mantenha como você já ajustou):
-    const precoProd = typeof prod.preco === 'number' ? prod.preco : 0;
+    // O loop começa aqui abrindo a chave {
+    produtosCadastradosDoBanco.forEach((prod, index) => { 
+        
+        // Todas as constantes precisam ficar AQUI DENTRO do loop para reconhecer o "prod"
+        const prodId = prod.codigoBarras || prod.id || index;
+        const nomeProd = prod.nome || "Produto sem nome";
+        const precoProd = typeof prod.preco === 'number' ? prod.preco : 0;
 
         containerListaRapida.innerHTML += `
             <div class="item-rapido" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-bottom: 1px solid #eee;">
@@ -98,16 +95,16 @@ const prodId = prod.codigoBarras || prod.id || index;
                         <span style="font-size:13px; color:#28a745;">R$ ${precoProd.toFixed(2)}</span>
                     </label>
                 </div>
-                
+
                 <input type="number" id="qtd-${index}" value="1" min="1" disabled style="padding: 5px; font-size:14px; width: 50px; margin-right: 10px;">
-                
+
                 <div class="acoes-produto" style="display: flex; gap: 8px;">
-                    <button onclick="editarProduto(${prodId}, ${index})" title="Editar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px;">✏️</button>
-                    <button onclick="deletarProduto(${prodId}, ${index})" title="Deletar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px;">🗑️</button>
+                    <button onclick="editarProduto('${prodId}', ${index})" title="Editar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px;">✏️</button>
+                    <button onclick="deletarProduto('${prodId}', ${index})" title="Deletar Produto" style="background: none; border: none; cursor: pointer; font-size: 16px;">🗑️</button>
                 </div>
             </div>
         `;
-    });
+    }); // O loop fecha corretamente aqui!
 }
 // 🗑️ FUNÇÃO PARA DELETAR PRODUTO NO RENDER
 function deletarProduto(id, index) {
