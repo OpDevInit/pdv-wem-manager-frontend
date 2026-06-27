@@ -267,7 +267,7 @@ campoCodigo.addEventListener('keypress', function (e) {
 
 function buscarProduto(codigo) {
     if (!codigo) return;
-    fetch(`${API_URL}/bipar/${codigo}`)
+    fetch(`${API_URL}/produtos/bipar/${codigo}`)
         .then(res => { if (!res.ok) throw new Error(); return res.json(); })
         .then(produto => {
             produtoAtualTemp = produto;
