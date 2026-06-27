@@ -267,8 +267,13 @@ campoCodigo.addEventListener('keypress', function (e) {
 
 function buscarProduto(codigo) {
     if (!codigo) return;
-    fetch(`${API_URL}/produtos/bipar/${codigo}`)
-        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+    
+    // Como no seu Java está @GetMapping("/bipar/{codigo}"), a rota correta é essa:
+    fetch(`${API_URL}/bipar/${codigo.trim()}`) 
+        .then(res => { 
+            if (!res.ok) throw new Error(); 
+            return res.json(); 
+        })
         .then(produto => {
             produtoAtualTemp = produto;
             nomeProdutoEncontrado.textContent = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
@@ -276,7 +281,10 @@ function buscarProduto(codigo) {
             campoQuantidade.focus();
             campoQuantidade.select();
         })
-        .catch(() => { alert('Produto não cadastrado!'); limparBusca(); });
+        .catch(() => { 
+            alert('Produto não cadastrado!'); 
+            limparBusca(); 
+        });
 }
 
 function adicionarAoCarrinho() {
