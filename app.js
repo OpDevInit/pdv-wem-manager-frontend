@@ -267,23 +267,31 @@ campoCodigo.addEventListener('keypress', function (e) {
 
 function buscarProduto(codigo) {
     if (!codigo) return;
-    
-    // Como no seu Java está @GetMapping("/bipar/{codigo}"), a rota correta é essa:
-    fetch(`${API_URL}/bipar/${codigo.trim()}`) 
-        .then(res => { 
-            if (!res.ok) throw new Error(); 
-            return res.json(); 
+
+    fetch(`${API_URL}/bipar/${codigo.trim()}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Produto não encontrado no servidor");
+            return res.json();
         })
         .then(produto => {
+            // Armazena o produto temporariamente para uso posterior
             produtoAtualTemp = produto;
-            nomeProdutoEncontrado.textContent = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
+
+            // CORREÇÃO AQUI: Mapeia usando 'precoUnitario' que vem do Java DTO
+            const precoExibicao = produto.precoUnitario || produto.preco || 0;
+            const nomeExibicao = produto.nome || "Produto sem nome";
+
+            nomeProdutoEncontrado.textContent = `${nomeExibicao} - R$ ${precoExibicao.toFixed(2)}`;
+            
+            // Exibe a área de quantidade na tela
             areaQuantidade.style.display = 'block';
             campoQuantidade.focus();
             campoQuantidade.select();
         })
-        .catch(() => { 
-            alert('Produto não cadastrado!'); 
-            limparBusca(); 
+        .catch(err => {
+            console.error("Erro na busca por código de barras:", err);
+            alert('Produto não cadastrado!');
+            limparBusca();
         });
 }
 
