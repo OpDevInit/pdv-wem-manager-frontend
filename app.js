@@ -444,3 +444,7 @@ function aplicarMascaraMoeda(input) {
     // vamos manter o ponto decimal padrão:
     input.value = valor;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    carregarProdutosDoBanco();
+});
