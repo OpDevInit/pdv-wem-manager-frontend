@@ -314,7 +314,7 @@ function fecharModalCadastro() {
 function salvarProdutoNoBanco(event) {
     const codigo = document.getElementById('cadCodigo').value;
     const nome = document.getElementById('cadNome').value;
-    const preco = parseFloat(document.getElementById('cadPreco').// Remove o 'id' e o 'parseInt', enviando o campo correto como String:
+    const preco = parseFloat(document.getElementById('cadPreco'));// Remove o 'id' e o 'parseInt', enviando o campo correto como String:
     const produtoDTO = { codigoBarras: codigo, nome: nome, preco: preco };
 
     
